@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  web_server:
+    image: httpd:alpine
+    container_name: apache_web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./public:/usr/local/apache2/htdocs/
+    networks:
+      - red_integracion
+
+  tester_client:
+    image: alpine
+    container_name: alpine_tester
+    command: /bin/sh -c "apk add --no-cache curl && while true; do curl -s http://web_server/ > /dev/null && echo 'Ping exitoso - web_server responde' || echo 'Fallo de conexión'; sleep 5; done"
+    depends_on:
+      - web_server
+    networks:
+      - red_integracion
+
+networks:
+  red_integracion:
+    driver: bridge
