@@ -1,6 +1,5 @@
-version: '3.8'
-
 services:
+  # Contenedor 1: Servidor web Apache (de la Entrega 1)
   web_server:
     image: httpd:alpine
     container_name: apache_web
@@ -11,6 +10,7 @@ services:
     networks:
       - red_integracion
 
+  # Contenedor 2: Cliente de prueba (de la Entrega 1)
   tester_client:
     image: alpine
     container_name: alpine_tester
@@ -20,6 +20,24 @@ services:
     networks:
       - red_integracion
 
+  # NUEVO Contenedor 3: Servidor Jenkins
+  jenkins_server:
+    image: jenkins/jenkins:lts
+    container_name: jenkins_master
+    privileged: true
+    user: root
+    ports:
+      - "8081:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - red_integracion
+
 networks:
   red_integracion:
     driver: bridge
+
+volumes:
+  jenkins_data:
