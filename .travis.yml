@@ -1,0 +1,15 @@
+language: minimal
+
+services:
+  - docker
+
+before_install:
+  - docker-compose --version
+
+script:
+  # Levanta el servidor web y el cliente de pruebas de tu archivo
+  - docker-compose up -d web_server tester_client
+  # Espera unos segundos para que el servidor de Apache inicie
+  - sleep 10
+  # Verifica los logs de tu contenedor alpine_tester para confirmar el "Ping exitoso"
+  - docker logs alpine_tester
